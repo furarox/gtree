@@ -1,5 +1,5 @@
-use crate::tree::{ChildIterator, ChildLink};
-use std::marker::PhantomData;
+use crate::tree::{ChildIterator, ChildLink, LazyTreeIterator, _iter_rec};
+use std::{collections::LinkedList, marker::PhantomData};
 
 /// Equivalent of immutable reference for [crate::Tree]
 ///
@@ -42,7 +42,7 @@ impl<'a, T> Cursor<'a, T> {
     /// let cursor = tree.cursor();
     /// assert_eq!(cursor.peek(), &10);
     /// ```
-    pub fn peek(&self) -> &T {
+    pub fn peek(&self) -> &'a T {
         unsafe { &(*self.current.as_ptr()).elem }
     }
 
@@ -167,6 +167,63 @@ impl<'a, T> Cursor<'a, T> {
             current: self.current,
             i: 0,
             len: self.childs_len(),
+            _boo: PhantomData,
+        }
+    }
+
+    /// Iterate over references of element stored in the subtree rooted at 'current' in a
+    /// depth-first way. This is done
+    /// by creating a Vec and pushing every references into this Vec and then returning an iterator
+    /// over this Vec. As it may not be very memory efficient, you might check [Cursor::lazyiter].
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(0);
+    /// tree.push_iter(vec![1, 2, 3]);
+    /// tree.navigate_to(1);
+    /// tree.push(4);
+    /// assert_eq!(tree.cursor().iter().collect::<Vec<&i32>>(), vec![&2, &4]);
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        let mut container = Vec::new();
+        _iter_rec(self.current, &mut container);
+        container.into_iter()
+    }
+
+    /// Iterate over the subtree rooted at 'current' in a lazy depth-first way, returning
+    /// references to the elements stored in the subtree. Although it is lazy iteration, meaning it is
+    /// less stressfull for memory, it is slower than [Cursor::iter], because the cursor that is used
+    /// to move around the tree has to keep tracks of which branches it has already explored.
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(0);
+    /// tree.push_iter(vec![1, 2, 3]);
+    /// tree.navigate_to(1);
+    /// tree.push_iter(vec![9, 8]);
+    /// tree.ascend();
+    /// tree.navigate_to(0);
+    /// tree.push_iter(vec![9, 10]);
+    /// tree.navigate_to(0);
+    /// tree.push(15);
+    /// tree.go_to_root();
+    /// assert_eq!(
+    ///     tree.lazyiter().collect::<Vec<&i32>>(),
+    ///     vec![&0, &1, &9, &15, &10, &2, &9, &8, &3]
+    /// );
+    /// tree.navigate_to(1);
+    /// assert_eq!(tree.lazyiter().collect::<Vec<&i32>>(), vec![&2, &9, &8]);
+    /// ```
+    pub fn lazyiter(&self) -> LazyTreeIterator<'a, T> {
+        let mut idx_list = LinkedList::new();
+        idx_list.push_back(0);
+        LazyTreeIterator {
+            cursor: Cursor {
+                current: self.current,
+                _boo: PhantomData,
+            },
+            idx_list,
             _boo: PhantomData,
         }
     }
