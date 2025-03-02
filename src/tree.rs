@@ -1,4 +1,4 @@
-use crate::cursor::Cursor;
+use crate::{Cursor, CursorMut, UnsafeCursor};
 use std::collections::LinkedList;
 use std::convert::Into;
 use std::marker::PhantomData;
@@ -37,7 +37,7 @@ pub(crate) struct Node<T> {
 /// In order to have a concurrent exploration of the tree, this tree crate implements a special
 /// type of cursor (as in [here](https://rust-unofficial.github.io/too-many-lists/fifth.html)).
 /// This is due to the fact that in order to move around the tree, you need to change the 'current' pointer of the tree and therefore
-/// invalidating every normal references to the tree. Check [Cursor], [CursorMut] and
+/// invalidating every normal references to the tree. Check [Cursor], [CursorMut] and [UnsafeCursor]
 /// for more detail.
 pub struct Tree<T> {
     root: Link<T>,
@@ -469,6 +469,50 @@ impl<T> Tree<T> {
         }
     }
 
+    /// Return a [CursorMut] pointing at 'current'
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(5);
+    /// let mut cursor = tree.cursor_mut();
+    /// assert_eq!(cursor.peek_mut(), &mut 5);
+    /// ```
+    pub fn cursor_mut(&mut self) -> CursorMut<'_, T> {
+        if self.is_empty() {
+            panic!("Tried to call cursor on an empty tree");
+        }
+
+        CursorMut {
+            current: self.current.unwrap(),
+            _boo: PhantomData,
+        }
+    }
+
+    /// Return an [UnsafeCursor] pointing at 'current'
+    ///
+    /// # Safety
+    /// Creating an UnsafeCursor is not unsafe in itself, but its utilisation can lead to unsafe
+    /// behaviour. Please read carefully [UnsafeCursor] documentation.
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let tree = Tree::from_element(5);
+    /// let mut cursor = tree.unsafe_cursor();
+    /// unsafe {assert_eq!(cursor.peek_mut(), &mut 5)};
+    /// ```
+    pub fn unsafe_cursor(&self) -> UnsafeCursor<'_, T> {
+        if self.is_empty() {
+            panic!("Tried to call cursor on an empty tree");
+        }
+
+        UnsafeCursor {
+            current: self.current.unwrap(),
+            _boo: PhantomData,
+        }
+    }
+
     /// Return a [Cursor] pointing at 'root'
     ///
     /// # Examples
@@ -491,12 +535,60 @@ impl<T> Tree<T> {
         }
     }
 
+    /// Return a [CursorMut] pointing at 'root'
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(3);
+    /// tree.push(10);
+    /// tree.navigate_to(0);
+    /// let mut cursor = tree.cursor_root_mut();
+    /// assert_eq!(cursor.peek(), &3);
+    /// ```
+    pub fn cursor_root_mut(&mut self) -> CursorMut<'_, T> {
+        if self.is_empty() {
+            panic!("Tried to call cursor_root on an empty tree");
+        }
+
+        CursorMut {
+            current: self.root.unwrap(),
+            _boo: PhantomData,
+        }
+    }
+
+    /// Return an [UnsafeCursor] pointing at 'root'
+    ///
+    /// # Safety
+    /// Creating an UnsafeCursor is not unsafe in itself, but its utilisation can lead to unsafe
+    /// behaviour. Please read carefully [UnsafeCursor] documentation.
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(5);
+    /// tree.push(10);
+    /// tree.navigate_to(0);
+    /// let mut cursor = tree.unsafe_cursor_root();
+    /// unsafe {assert_eq!(cursor.peek_mut(), &mut 5)};
+    /// ```
+    pub fn unsafe_cursor_root(&self) -> UnsafeCursor<'_, T> {
+        if self.is_empty() {
+            panic!("Tried to call cursor on an empty tree");
+        }
+
+        UnsafeCursor {
+            current: self.root.unwrap(),
+            _boo: PhantomData,
+        }
+    }
+
     /// Collect the subtree in a depth-first order rooted at 'current' into a vec, and ascend 'current'.
     /// If 'current' is at 'root', and so it cannot ascend, the tree becomes an empty tree (and so
     /// most method will therefore fail).
     /// This method is the main way to collect back elements stored in the tree.
     ///
-    /// This behaviour is different from Into<Vec> implemented, where the whole tree is turned into
+    /// This behaviour is different from `Into<Vec>` implemented, where the whole tree is turned into
     /// a Vec, and not just a subtree.
     ///
     /// # Examples
@@ -617,7 +709,7 @@ impl<T> Tree<T> {
     }
 
     /// Iterate over the subtree rooted at 'current' in a lazy depth-first way, returning
-    /// references to the elements stored in the tree. Although it is lazy iteration, meaning it is
+    /// references to the elements stored in the subtree. Although it is lazy iteration, meaning it is
     /// less stressfull for memory, it is slower than [Tree::iter], because the cursor that is used
     /// to move around the tree has to keep tracks of which branches it has already explored.
     ///
@@ -655,7 +747,17 @@ impl<T> Tree<T> {
     }
 
     pub fn lazyiter_mut(&mut self) -> LazyTreeIteratorMut<'_, T> {
-        !unimplemented!()
+        if self.is_empty() {
+            panic!("Tried to call lazyiter_mut on an empty tree");
+        }
+
+        let mut idx_vec = LinkedList::new();
+        idx_vec.push_back(0);
+        LazyTreeIteratorMut {
+            cursor: self.unsafe_cursor(),
+            idx_list: idx_vec,
+            _boo: PhantomData,
+        }
     }
 }
 
@@ -680,10 +782,10 @@ impl<'a, T> Iterator for ChildIterator<'a, T> {
 }
 
 pub struct ChildIteratorMut<'a, T> {
-    current: ChildLink<T>,
-    i: usize,
-    _boo: PhantomData<&'a T>,
-    len: usize,
+    pub(crate) current: ChildLink<T>,
+    pub(crate) i: usize,
+    pub(crate) _boo: PhantomData<&'a T>,
+    pub(crate) len: usize,
 }
 
 impl<'a, T> Iterator for ChildIteratorMut<'a, T> {
@@ -742,9 +844,50 @@ impl<'a, T> Iterator for LazyTreeIterator<'a, T> {
 }
 
 pub struct LazyTreeIteratorMut<'a, T> {
-    _boo: PhantomData<&'a T>,
+    pub(crate) cursor: UnsafeCursor<'a, T>,
+    pub(crate) idx_list: LinkedList<usize>,
+    pub(crate) _boo: PhantomData<&'a T>,
 }
 
+impl<'a, T> Iterator for LazyTreeIteratorMut<'a, T> {
+    type Item = &'a mut T;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.idx_list.is_empty() {
+            return None;
+        }
+
+        let res;
+        if self.cursor.childs_len() == 0 {
+            unsafe {
+                res = Some(self.cursor.peek_mut());
+            }
+            self.cursor.ascend();
+            self.idx_list.pop_back();
+        } else if *self.idx_list.back().unwrap() < self.cursor.childs_len() {
+            if *self.idx_list.back().unwrap() == 0 {
+                unsafe {
+                    res = Some(self.cursor.peek_mut());
+                }
+                self.cursor.navigate_to(0);
+                *self.idx_list.back_mut().unwrap() += 1;
+                self.idx_list.push_back(0);
+            } else {
+                self.cursor.navigate_to(*self.idx_list.back().unwrap());
+                *self.idx_list.back_mut().unwrap() += 1;
+                self.idx_list.push_back(0);
+                res = self.next();
+            }
+        } else {
+            self.idx_list.pop_back();
+            if self.cursor.has_father() {
+                self.cursor.ascend();
+            }
+            res = self.next();
+        }
+
+        res
+    }
+}
 /// Recursive function to gather reference of the subtree into container.
 pub fn _iter_rec<T>(link: ChildLink<T>, container: &mut Vec<&T>) {
     unsafe {
@@ -756,7 +899,7 @@ pub fn _iter_rec<T>(link: ChildLink<T>, container: &mut Vec<&T>) {
 }
 
 /// Recursive function to gather mutable reference of the subtree into container.
-fn _iter_rec_mut<T>(link: ChildLink<T>, container: &mut Vec<&mut T>) {
+pub fn _iter_rec_mut<T>(link: ChildLink<T>, container: &mut Vec<&mut T>) {
     unsafe {
         container.push(&mut (*link.as_ptr()).elem);
         for child in (*link.as_ptr()).childs.iter() {
@@ -1069,5 +1212,39 @@ mod test {
         );
         tree.navigate_to(1);
         assert_eq!(tree.lazyiter().collect::<Vec<&i32>>(), vec![&2, &9, &8]);
+    }
+
+    #[test]
+    fn lazyiter_mut() {
+        let mut tree = Tree::from_element(0);
+        tree.push_iter(vec![1, 2, 3]);
+        tree.navigate_to(1);
+        tree.push_iter(vec![9, 8]);
+        tree.ascend();
+        tree.navigate_to(0);
+        tree.push_iter(vec![9, 10]);
+        tree.navigate_to(0);
+        tree.push(15);
+        tree.go_to_root();
+        assert_eq!(
+            tree.lazyiter_mut().collect::<Vec<&mut i32>>(),
+            vec![&mut 0, &mut 1, &mut 9, &mut 15, &mut 10, &mut 2, &mut 9, &mut 8, &mut 3]
+        );
+
+        for el in tree.lazyiter_mut() {
+            *el += 1
+        }
+        assert_eq!(
+            tree.lazyiter().collect::<Vec<&i32>>(),
+            vec![&1, &2, &10, &16, &11, &3, &10, &9, &4]
+        );
+
+        tree.navigate_to(1);
+        for el in tree.lazyiter_mut() {
+            *el += 10;
+        }
+        tree.go_to_root();
+
+        assert_eq!(tree.into_vec(), [1, 2, 10, 16, 11, 13, 20, 19, 4]);
     }
 }
