@@ -1,6 +1,6 @@
-//! # gtree : a crate for game tree
+//! # libtree : a crate for game tree
 //!
-//! gtree is a crate that implements trees in Rust, taking huge inspirations from [Rust with too
+//! libtree is a crate that implements trees in Rust, taking huge inspirations from [Rust with too
 //! many linked lists](https://rust-unofficial.github.io/too-many-lists/) (so it is as useless and
 //! stupid as
 //! it's inspiration). The main purpose of this crate was to implements tree for game tree needed
@@ -18,9 +18,9 @@
 //!
 //! # Showcase
 //! ## Creation and adding elements
-//! gtree provides the [Tree] structure to create a store a tree, and add new element to it.
+//! libtree provides the [Tree] structure to create a store a tree, and add new element to it.
 //! ```
-//! use gtree::Tree;
+//! use libtree::Tree;
 //! let mut tree = Tree::from_element(1);
 //! tree.push(2);
 //! ```
@@ -33,7 +33,7 @@
 //! - `ascend()` which navigates 'current' to its father (if possible i.e. not at 'root').
 //! - `go_to_root()` which navigates 'current' to 'root'.
 //! ```
-//! # use gtree::Tree;
+//! # use libtree::Tree;
 //! # let mut tree = Tree::from_element(1);
 //! # tree.push(2);
 //! assert_eq!(tree.peek(), &1);
@@ -48,7 +48,7 @@
 //! `Tree`s can be joined and splitted. Splitting tree is for the moment the best way to drop
 //! unwantted part of the tree.
 //! ```
-//! # use gtree::Tree;
+//! # use libtree::Tree;
 //! let mut tree1 = Tree::from_element(1);
 //! tree1.push_iter(vec![2, 3]);
 //! let mut tree2 = Tree::from_element(4);
@@ -63,7 +63,7 @@
 //! ## Cursors
 //! Cursors are of three differents types and allows concurrent exploration of the tree.
 //! ```
-//! # use gtree::Tree;
+//! # use libtree::Tree;
 //! # let mut tree1 = Tree::from_element(1);
 //! # tree1.push_iter(vec![2, 3]);
 //! # let mut tree2 = Tree::from_element(4);
@@ -81,7 +81,7 @@
 //! Most exploration methods when called will only explore the subtree rooted as 'current' (for a
 //! tree or a cursor).
 //! ```
-//! # use gtree::Tree;
+//! # use libtree::Tree;
 //! let mut tree = Tree::from_element(1);
 //! tree.push_iter(vec![4, 2, 1]);
 //! tree.navigate_to(0);

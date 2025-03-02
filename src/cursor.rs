@@ -17,7 +17,7 @@ use std::{collections::LinkedList, marker::PhantomData, ptr::NonNull};
 ///
 /// # Examples
 /// ```
-/// # use gtree::Tree;
+/// # use libtree::Tree;
 /// let mut tree = Tree::from_element(10);
 /// tree.push_iter(vec![1, 2, 3]);
 /// tree.navigate_to(1);
@@ -52,7 +52,7 @@ pub struct Cursor<'a, T> {
 ///
 /// # Examples
 /// ```
-/// # use gtree::Tree;
+/// # use libtree::Tree;
 /// let mut tree = Tree::from_element(10);
 /// tree.push_iter(vec![1, 2, 3]);
 /// // Firstly, node that we need a mut on the cursor definition.
@@ -79,7 +79,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let tree = Tree::from_element(10);
     /// let cursor = tree.cursor();
     /// assert_eq!(cursor.peek(), &10);
@@ -92,7 +92,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push(5);
     /// let cursor = tree.cursor();
@@ -114,7 +114,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// let mut cursor = tree.cursor();
@@ -142,7 +142,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// tree.navigate_to(0);
@@ -167,7 +167,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// tree.navigate_to(0);
@@ -184,7 +184,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 1, 1, 1, 1]);
     /// let cursor = tree.cursor();
@@ -198,7 +198,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// let cursor = tree.cursor();
@@ -220,7 +220,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -239,7 +239,7 @@ impl<'a, T> Cursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -276,7 +276,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// let cursor = tree.cursor_mut();
     /// assert_eq!(cursor.peek(), &10);
@@ -289,7 +289,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// let mut cursor = tree.cursor_mut();
     /// assert_eq!(cursor.peek_mut(), &mut 10);
@@ -302,7 +302,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push(5);
     /// let cursor = tree.cursor_mut();
@@ -324,7 +324,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push(5);
     /// let mut cursor = tree.cursor_mut();
@@ -346,7 +346,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// let mut cursor = tree.cursor_mut();
@@ -374,7 +374,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// tree.navigate_to(0);
@@ -399,7 +399,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// tree.navigate_to(0);
@@ -416,7 +416,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 1, 1, 1, 1]);
     /// let cursor = tree.cursor_mut();
@@ -430,7 +430,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// let cursor = tree.cursor_mut();
@@ -449,7 +449,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// let mut cursor = tree.cursor_mut();
@@ -471,7 +471,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -487,7 +487,7 @@ impl<'a, T> CursorMut<'a, T> {
     /// Same as [CursorMut::iter], but returns mutable reference instead
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -506,7 +506,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -542,7 +542,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -576,7 +576,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(1);
     /// let mut cursor = tree.cursor_mut();
     /// cursor.push(2);
@@ -602,7 +602,7 @@ impl<'a, T> CursorMut<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// let mut cursor = tree.cursor_mut();
     /// cursor.push_iter(vec![1, 2, 3]);
@@ -644,7 +644,7 @@ impl<'a, T> CursorMut<'a, T> {
 /// responsability, we also now can create two mutable references point at the same node
 ///
 /// ```
-/// # use gtree::Tree;
+/// # use libtree::Tree;
 /// let mut tree = Tree::from_element(vec![10]);
 /// let cursor1 = tree.unsafe_cursor();
 /// let cursor2 = tree.unsafe_cursor();
@@ -675,7 +675,7 @@ impl<'a, T> CursorMut<'a, T> {
 ///
 /// # A safe usage example
 /// ```
-/// # use gtree::Tree;
+/// # use libtree::Tree;
 /// let mut tree = Tree::from_element(0);
 /// tree.push_iter(vec![1, 2]);
 /// let mut cursor1 = tree.unsafe_cursor();
@@ -699,7 +699,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let tree = Tree::from_element(10);
     /// let cursor = tree.unsafe_cursor();
     /// assert_eq!(cursor.peek(), &10);
@@ -717,7 +717,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let tree = Tree::from_element(1);
     /// let cursor = tree.unsafe_cursor();
     /// unsafe {assert_eq!(cursor.peek_mut(), &mut 1);}
@@ -730,7 +730,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push(5);
     /// let cursor = tree.unsafe_cursor();
@@ -758,7 +758,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push(5);
     /// let cursor = tree.unsafe_cursor();
@@ -780,7 +780,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// let mut cursor = tree.unsafe_cursor();
@@ -808,7 +808,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// tree.navigate_to(0);
@@ -833,7 +833,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push(1);
     /// tree.navigate_to(0);
@@ -850,7 +850,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 1, 1, 1, 1]);
     /// let cursor = tree.unsafe_cursor();
@@ -864,7 +864,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// let cursor = tree.unsafe_cursor();
@@ -883,7 +883,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(1);
     /// let mut cursor = tree.unsafe_cursor();
     /// cursor.push(2);
@@ -909,7 +909,7 @@ impl<'a, T> UnsafeCursor<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// let mut cursor = tree.unsafe_cursor();
     /// cursor.push_iter(vec![1, 2, 3]);

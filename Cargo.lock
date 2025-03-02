@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "gtree"
+name = "libtree"
 version = "0.1.0"

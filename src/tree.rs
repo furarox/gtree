@@ -67,7 +67,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push_iter(vec![1, 2, 3]);
     /// // empty the tree if called at root, check documentation for into_vec
@@ -82,7 +82,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(1);
     /// tree.push(2);
     /// tree.navigate_to(0);
@@ -109,7 +109,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(2);
@@ -128,7 +128,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 3]);
     /// tree.insert(1, 2);
@@ -177,7 +177,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push(-10);
     /// tree.navigate_to(0);
@@ -206,7 +206,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// assert_eq!(tree.has_father(), false);
     /// tree.push(10);
@@ -224,7 +224,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(1);
     /// tree.push(2);
     /// tree.navigate_to(0);
@@ -245,7 +245,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let tree = Tree::from_element(32);
     /// assert_eq!(tree.peek(), &32);
     /// ```
@@ -260,7 +260,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(3);
     /// assert_eq!(tree.peek_mut(), &mut 3);
     /// ```
@@ -275,7 +275,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// assert_eq!(tree.peek_child(2), &3);
@@ -303,7 +303,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// assert_eq!(tree.peek_child_mut(2), &mut 3);
@@ -330,7 +330,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(10);
     /// tree.push_iter(vec![1, 2, 3]);
     /// assert_eq!(tree.childs_len(), 3);
@@ -372,7 +372,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree1 = Tree::from_element(0);
     /// tree1.push_iter(vec![1, 2, 3]);
     /// let mut tree2 = Tree::from_element(4);
@@ -407,7 +407,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2]);
     /// tree.navigate_to(1);
@@ -453,7 +453,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let tree = Tree::from_element(5);
     /// let cursor = tree.cursor();
     /// assert_eq!(cursor.peek(), &5);
@@ -473,7 +473,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(5);
     /// let mut cursor = tree.cursor_mut();
     /// assert_eq!(cursor.peek_mut(), &mut 5);
@@ -497,7 +497,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let tree = Tree::from_element(5);
     /// let mut cursor = tree.unsafe_cursor();
     /// unsafe {assert_eq!(cursor.peek_mut(), &mut 5)};
@@ -517,7 +517,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(3);
     /// tree.push(10);
     /// tree.navigate_to(0);
@@ -539,7 +539,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(3);
     /// tree.push(10);
     /// tree.navigate_to(0);
@@ -565,7 +565,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(5);
     /// tree.push(10);
     /// tree.navigate_to(0);
@@ -594,7 +594,7 @@ impl<T> Tree<T> {
     /// # Examples
     /// ```
     /// // Example on a subtree
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(0);
@@ -609,7 +609,7 @@ impl<T> Tree<T> {
     /// ```
     /// ```
     /// // Example at 'root'
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element([0, 0]);
     /// tree.push_iter([[1, 2], [3, 4]]);
     /// assert_eq!(tree.into_vec(), vec![[0, 0], [1, 2], [3, 4]]);
@@ -664,7 +664,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -691,7 +691,7 @@ impl<T> Tree<T> {
     /// [CursorMut] and send him to root and then call [CursorMut::iter].
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
@@ -715,7 +715,7 @@ impl<T> Tree<T> {
     ///
     /// # Examples
     /// ```
-    /// # use gtree::Tree;
+    /// # use libtree::Tree;
     /// let mut tree = Tree::from_element(0);
     /// tree.push_iter(vec![1, 2, 3]);
     /// tree.navigate_to(1);
