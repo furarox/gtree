@@ -20,7 +20,7 @@ also stores an element, often abbreviated into elem or el.
 ## Creation and adding elements
 gtree provides the [Tree] structure to create a store a tree, and add new element to it.
 ```rust
-use gtree::Tree;
+use libtree::Tree;
 let mut tree = Tree::from_element(1);
 tree.push(2);
 ```
