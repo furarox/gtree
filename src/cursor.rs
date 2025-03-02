@@ -1,8 +1,8 @@
 use crate::tree::{
-    ChildIterator, ChildIteratorMut, ChildLink, LazyTreeIterator, LazyTreeIteratorMut, _iter_rec,
-    _iter_rec_mut,
+    ChildIterator, ChildIteratorMut, ChildLink, LazyTreeIterator, LazyTreeIteratorMut, Node,
+    _iter_rec, _iter_rec_mut,
 };
-use std::{collections::LinkedList, marker::PhantomData};
+use std::{collections::LinkedList, marker::PhantomData, ptr::NonNull};
 
 /// Equivalent of immutable reference for [crate::Tree]
 ///
@@ -571,6 +571,53 @@ impl<'a, T> CursorMut<'a, T> {
             _boo: PhantomData,
         }
     }
+
+    /// Push el to 'current'.child as a new node in the tree.
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(1);
+    /// let mut cursor = tree.cursor_mut();
+    /// cursor.push(2);
+    /// cursor.navigate_to(0);
+    /// assert_eq!(cursor.peek(), &2);
+    /// assert_eq!(tree.into_vec(), vec![1, 2]);
+    /// ```
+    pub fn push(&mut self, el: T) {
+        unsafe {
+            let current_node = &mut *(self.current.as_ptr());
+            current_node
+                .childs
+                .push(NonNull::new_unchecked(Box::into_raw(Box::new(Node {
+                    elem: el,
+                    childs: Vec::new(),
+                    father: Some(self.current),
+                }))))
+        }
+    }
+
+    /// Convenient method to push the elements of an iterator into the tree.
+    /// It's litteraly : for el in iter.into_iter() { tree.push(el) }
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(0);
+    /// let mut cursor = tree.cursor_mut();
+    /// cursor.push_iter(vec![1, 2, 3]);
+    /// cursor.navigate_to(2);
+    /// assert_eq!(cursor.peek(), &3);
+    /// assert_eq!(tree.into_vec(), vec![0, 1, 2, 3]);
+    /// ```
+    pub fn push_iter<I>(&mut self, iter: I)
+    where
+        I: IntoIterator<Item = T>,
+    {
+        for el in iter.into_iter() {
+            self.push(el);
+        }
+    }
 }
 
 /// An unsafe version of [CursorMut]
@@ -831,6 +878,53 @@ impl<'a, T> UnsafeCursor<'a, T> {
             _boo: PhantomData,
         }
     }
+
+    /// Push el to 'current'.child as a new node in the tree.
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(1);
+    /// let mut cursor = tree.unsafe_cursor();
+    /// cursor.push(2);
+    /// cursor.navigate_to(0);
+    /// assert_eq!(cursor.peek(), &2);
+    /// assert_eq!(tree.into_vec(), vec![1, 2]);
+    /// ```
+    pub fn push(&mut self, el: T) {
+        unsafe {
+            let current_node = &mut *(self.current.as_ptr());
+            current_node
+                .childs
+                .push(NonNull::new_unchecked(Box::into_raw(Box::new(Node {
+                    elem: el,
+                    childs: Vec::new(),
+                    father: Some(self.current),
+                }))))
+        }
+    }
+
+    /// Convenient method to push the elements of an iterator into the tree.
+    /// It's litteraly : for el in iter.into_iter() { tree.push(el) }
+    ///
+    /// # Examples
+    /// ```
+    /// # use gtree::Tree;
+    /// let mut tree = Tree::from_element(0);
+    /// let mut cursor = tree.unsafe_cursor();
+    /// cursor.push_iter(vec![1, 2, 3]);
+    /// cursor.navigate_to(2);
+    /// assert_eq!(cursor.peek(), &3);
+    /// assert_eq!(tree.into_vec(), vec![0, 1, 2, 3]);
+    /// ```
+    pub fn push_iter<I>(&mut self, iter: I)
+    where
+        I: IntoIterator<Item = T>,
+    {
+        for el in iter.into_iter() {
+            self.push(el);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -892,5 +986,10 @@ mod test {
             tree.iter().collect::<Vec<&Vec<i32>>>(),
             vec![&vec![1, 2, 3], &vec![], &vec![]]
         );
+        cursor2.push(vec![10]);
+        assert_eq!(
+            tree.iter().collect::<Vec<&Vec<i32>>>(),
+            vec![&vec![1, 2, 3], &vec![], &vec![], &vec![10]]
+        )
     }
 }
