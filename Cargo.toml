@@ -2,5 +2,13 @@
 name = "gtree"
 version = "0.1.0"
 edition = "2021"
+authors = ["furarox"]
+description = "a crate for general or game tree"
+readme = "README.MD"
+repisotory = "https://github.com/furarox/gtree"
+keywords = ["tree"]
+rust-version = "1.82.0"
+license = "MIT"
+
 
 [dependencies]
